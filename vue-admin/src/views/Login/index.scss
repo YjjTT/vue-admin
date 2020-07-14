@@ -1,0 +1,41 @@
+#login {
+  background-color: $color_main;
+  height: 100vh;
+}
+.login-wrap {
+  width: 330px;
+  margin: auto;
+  .menu-tab {
+    text-align: center;
+    li {
+      display: inline-block;
+      width: 88px;
+      line-height: 36px;
+      font-size: 14px;
+      color: #ffffff;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .current {
+      background-color: rgba(0, 0, 0, .1);
+    }
+  }
+  .login-form {
+    margin-top: 29px;
+    label {
+      display: block;
+      color: white;
+      font-size: 14px;
+    }
+  }
+  .item-form {
+    margin-bottom: 13px;
+  }
+  .block {
+    display: block;
+    width: 100%;
+  }
+  .login-btn {
+    margin-top: 19px;
+  }
+}
