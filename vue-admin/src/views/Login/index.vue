@@ -12,10 +12,17 @@
           <label>邮箱</label>
           <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
         </el-form-item>
+
         <el-form-item prop="password" class="item-form">
           <label>密码</label>
-          <el-input type="password" v-model="ruleForm.password" autocomplete="off" minlength="6" maxlength="20"></el-input>
+          <el-input type="text" v-model="ruleForm.password" autocomplete="off" minlength="6" maxlength="20"></el-input>
         </el-form-item>
+
+        <el-form-item prop="againPassword" class="item-form">
+          <label>确认密码</label>
+          <el-input type="text" v-model="ruleForm.againPassword" autocomplete="off" minlength="6" maxlength="20"></el-input>
+        </el-form-item>
+
         <el-form-item prop="code" class="item-form">
           <label>验证码</label>
           <el-row :gutter="10">
@@ -36,34 +43,47 @@
 </template>
 
 <script>
-export default {
+  import { stripscript, validateEmail, validatePasswords, validateCodes } from "../../utils/validate";
+  export default {
   name: "Login",
   data() {
     const validateUsername = (rule, value, callback) => {
-      let reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
       if (value === '') {
         callback(new Error('请输入用户名'));
-      } else if (!reg.test(value)){
+      } else if (validateEmail(value)){
         callback(new Error('用户名格式有误'));
       } else {
         callback();
       }
     }
     const validatePassword = (rule, value, callback) => {
-      let reg = /^(?!\D+$)(?![^a-zA-Z]+$)\S{6,20}$/
+      this.ruleForm.password = stripscript(value)
+      value = this.ruleForm.password
       if (value === '') {
         callback(new Error('请输入密码'));
-      } else if (!reg.test(value)) {
+      } else if (validatePasswords(value)) {
         callback(new Error('密码为6-20位字母加数字组合'));
       } else {
         callback();
       }
     }
+    const validateAgainPassword = (rule, value, callback) => {
+      this.ruleForm.againPassword = stripscript(value)
+      value = this.ruleForm.againPassword
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (this.ruleForm.password !== value) {
+        callback(new Error('两次密码输入不一致'));
+      } else {
+        callback();
+      }
+    }
     const validateCode = (rule, value, callback) => {
-      let reg = /^[a-z0-9]{6}$/
+      this.ruleForm.code = stripscript(value)
+      value = this.ruleForm.code
       if (value === '') {
         callback(new Error('请输入验证码'));
-      } else if (!reg.test(value)) {
+      } else if (validateCodes(value)) {
         callback(new Error('验证码格式有误'));
       } else {
         callback();
@@ -76,8 +96,9 @@ export default {
       ],
       ruleForm: {
         username: '',
-        checkPass: '',
-        age: ''
+        password: '',
+        againPassword: '',
+        code: ''
       },
       rules: {
         username: [
@@ -85,6 +106,9 @@ export default {
         ],
         password: [
           { validator: validatePassword, trigger: 'blur' }
+        ],
+        againPassword: [
+          { validator: validateAgainPassword, trigger: 'blur' }
         ],
         code: [
           { validator: validateCode, trigger: 'blur' }
