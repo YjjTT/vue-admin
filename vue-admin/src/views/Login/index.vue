@@ -18,7 +18,7 @@
           <el-input type="text" v-model="ruleForm.password" autocomplete="off" minlength="6" maxlength="20"></el-input>
         </el-form-item>
 
-        <el-form-item prop="againPassword" class="item-form">
+        <el-form-item prop="againPassword" class="item-form" v-show="model === 'register'">
           <label>确认密码</label>
           <el-input type="text" v-model="ruleForm.againPassword" autocomplete="off" minlength="6" maxlength="20"></el-input>
         </el-form-item>
@@ -68,6 +68,7 @@
       }
     }
     const validateAgainPassword = (rule, value, callback) => {
+      if (this.model === 'login') { callback() }
       this.ruleForm.againPassword = stripscript(value)
       value = this.ruleForm.againPassword
       if (value === '') {
@@ -91,9 +92,10 @@
     }
     return {
       menuTab: [
-        {txt: '登录', current: true},
-        {txt: '注册', current: false}
+        {txt: '登录', current: true, type: 'login'},
+        {txt: '注册', current: false, type: 'register'}
       ],
+      model: 'login',
       ruleForm: {
         username: '',
         password: '',
@@ -122,6 +124,7 @@
         element.current = false
       })
       data.current = true
+      this.model = data.type
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
