@@ -33,12 +33,14 @@
                             <el-input v-model.number="ruleForm.code" minlength="6" maxlength="6"></el-input>
                         </el-col>
                         <el-col :span="9">
-                            <el-button type="success" class="block">获取验证码</el-button>
+                            <el-button type="success" @click="getSms()" class="block">获取验证码</el-button>
                         </el-col>
                     </el-row>
                 </el-form-item>
                 <el-form-item>
-                    <el-button class="login-btn block" type="danger" @click="submitForm('ruleForm')">提交</el-button>
+                    <el-button class="login-btn block"
+                               type="danger"
+                               @click="submitForm('ruleForm')" :disabled="loginStatus">{{model==='login' ? '登录': '注册'}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -48,10 +50,10 @@
 <script>
     import {reactive, ref, onMounted} from '@vue/composition-api'
     import {stripscript, validateEmail, validatePasswords, validateCodes} from "../../utils/validate";
-
+    import { GetSms } from '../../api/login'
     export default {
         name: "Login",
-        setup(props, context) {
+        setup(props, {refs, root}) {
             const validateUsername = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入用户名'));
@@ -102,6 +104,7 @@
                 {txt: '注册', current: false, type: 'register'}
             ])
             const model = ref('login')
+            const loginStatus = ref(true)
             const ruleForm = reactive({
                 username: '',
                     password: '',
@@ -123,7 +126,15 @@
                 ]
             })
             onMounted(() => {
-
+            })
+            const getSms = (() => {
+                if (ruleForm.username === '') {
+                    root.$message.error('邮箱不能为空!')
+                    return false
+                }
+                GetSms({
+                    username: ruleForm.username
+                })
             })
             const toggleMenu = (data=> {
                 menuTab.forEach(element => {
@@ -133,7 +144,7 @@
                 model.value = data.type
             })
             const submitForm = (formName=> {
-                context.refs[formName].validate((valid) => {
+                refs[formName].validate((valid) => {
                     if (valid) {
                         alert('submit!');
                     } else {
@@ -148,7 +159,9 @@
                 toggleMenu,
                 submitForm,
                 ruleForm,
-                rules
+                rules,
+                getSms,
+                loginStatus
             }
         }
     };
