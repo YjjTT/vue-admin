@@ -5,7 +5,7 @@ import instance from '@/utils/request'
  * @constructor
  */
 export function GetSms(data) {
-    instance.request({
+    return instance.request({
         method: 'POST',
         url: '/getSms/',
         data

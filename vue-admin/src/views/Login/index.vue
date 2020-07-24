@@ -8,21 +8,21 @@
                     @click="toggleMenu(item)">{{item.txt}}
                 </li>
             </ul>
-            <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="login-form">
+            <el-form :model="ruleForm" status-icon :rules="rules" ref="loginForm" class="login-form">
                 <el-form-item prop="username" class="item-form">
-                    <label>邮箱</label>
-                    <el-input type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
+                    <label for="username">邮箱</label>
+                    <el-input id="username" type="text" v-model="ruleForm.username" autocomplete="off"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="password" class="item-form">
-                    <label>密码</label>
-                    <el-input type="text" v-model="ruleForm.password" autocomplete="off" minlength="6"
+                    <label for="password">密码</label>
+                    <el-input id="password" type="password" v-model="ruleForm.password" autocomplete="off" minlength="6"
                               maxlength="20"></el-input>
                 </el-form-item>
 
                 <el-form-item prop="againPassword" class="item-form" v-show="model === 'register'">
                     <label>确认密码</label>
-                    <el-input type="text" v-model="ruleForm.againPassword" autocomplete="off" minlength="6"
+                    <el-input type="password" v-model="ruleForm.againPassword" autocomplete="off" minlength="6"
                               maxlength="20"></el-input>
                 </el-form-item>
 
@@ -33,7 +33,7 @@
                             <el-input v-model.number="ruleForm.code" minlength="6" maxlength="6"></el-input>
                         </el-col>
                         <el-col :span="9">
-                            <el-button type="success" @click="getSms()" class="block">获取验证码</el-button>
+                            <el-button type="success" @click="getSms()" :disabled="codeStatus" class="block">{{codeButtonText}}</el-button>
                         </el-col>
                     </el-row>
                 </el-form-item>
@@ -105,6 +105,8 @@
             ])
             const model = ref('login')
             const loginStatus = ref(true)
+            const codeStatus = ref(false)
+            const codeButtonText = ref('获取验证码')
             const ruleForm = reactive({
                 username: '',
                     password: '',
@@ -125,16 +127,28 @@
                     {validator: validateCode, trigger: 'blur'}
                 ]
             })
-            onMounted(() => {
-            })
+            onMounted(() => {})
             const getSms = (() => {
                 if (ruleForm.username === '') {
                     root.$message.error('邮箱不能为空!')
                     return false
                 }
-                GetSms({
-                    username: ruleForm.username
-                })
+                if (validateEmail(ruleForm.username)){
+                    root.$message.error('邮箱格式不正确!')
+                    return false
+                }
+
+                codeStatus.value = true
+                codeButtonText.value = '发送中'
+
+                setTimeout(() => {
+                    GetSms({
+                        username: ruleForm.username,
+                        module: model.value
+                    }).then(res => {
+                        root.$message.success(res.data.message)
+                    })
+                }, 5000)
             })
             const toggleMenu = (data=> {
                 menuTab.forEach(element => {
@@ -142,6 +156,8 @@
                 })
                 data.current = true
                 model.value = data.type
+                // 重置表单
+                refs['loginForm'].resetFields()
             })
             const submitForm = (formName=> {
                 refs[formName].validate((valid) => {
@@ -161,7 +177,9 @@
                 ruleForm,
                 rules,
                 getSms,
-                loginStatus
+                loginStatus,
+                codeStatus,
+                codeButtonText
             }
         }
     };
