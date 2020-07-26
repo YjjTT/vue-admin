@@ -30,7 +30,7 @@
                     <label>验证码</label>
                     <el-row :gutter="10">
                         <el-col :span="15">
-                            <el-input v-model.number="ruleForm.code" minlength="6" maxlength="6"></el-input>
+                            <el-input v-model="ruleForm.code" minlength="6" maxlength="6"></el-input>
                         </el-col>
                         <el-col :span="9">
                             <el-button type="success" @click="getSms()" :disabled="codeStatus" class="block">{{codeButtonText}}</el-button>
@@ -40,7 +40,7 @@
                 <el-form-item>
                     <el-button class="login-btn block"
                                type="danger"
-                               @click="submitForm('ruleForm')" :disabled="loginStatus">{{model==='login' ? '登录': '注册'}}</el-button>
+                               @click="submitForm('loginForm')" :disabled="loginStatus">{{model==='login' ? '登录': '注册'}}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -50,7 +50,7 @@
 <script>
     import {reactive, ref, onMounted} from '@vue/composition-api'
     import {stripscript, validateEmail, validatePasswords, validateCodes} from "../../utils/validate";
-    import { GetSms } from '../../api/login'
+    import {GetSms, Login, Register} from '../../api/login'
     export default {
         name: "Login",
         setup(props, {refs, root}) {
@@ -107,6 +107,7 @@
             const loginStatus = ref(true)
             const codeStatus = ref(false)
             const codeButtonText = ref('获取验证码')
+            let timer = ref(null)
             const ruleForm = reactive({
                 username: '',
                     password: '',
@@ -128,6 +129,7 @@
                 ]
             })
             onMounted(() => {})
+
             const getSms = (() => {
                 if (ruleForm.username === '') {
                     root.$message.error('邮箱不能为空!')
@@ -147,8 +149,10 @@
                         module: model.value
                     }).then(res => {
                         root.$message.success(res.data.message)
+                        loginStatus.value = false
+                        countDown(60)
                     })
-                }, 5000)
+                }, 1000)
             })
             const toggleMenu = (data=> {
                 menuTab.forEach(element => {
@@ -158,16 +162,56 @@
                 model.value = data.type
                 // 重置表单
                 refs['loginForm'].resetFields()
+                clearCountDown()
             })
             const submitForm = (formName=> {
                 refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        let data = {
+                            username: ruleForm.username,
+                            password: ruleForm.password,
+                            code: ruleForm.code,
+                            module: model.value
+                        }
+                        if (model.value === 'login') {
+                            Login(data).then(res => {
+                                console.log(res)
+                                root.$message.success(res.data.message)
+                            })
+                        }else {
+                            Register(data).then(res => {
+                                root.$message.success(res.data.message)
+                                toggleMenu(menuTab[0])
+                                clearCountDown()
+                            }).catch(err => {
+                            })
+                        }
                     } else {
                         console.log('error submit!!');
                         return false;
                     }
                 })
+            })
+            const countDown = ((number) => {
+                let time = number
+                if (timer) {
+                    clearInterval(timer.value)
+                }
+                timer.value = setInterval(() => {
+                    time--
+                    if (time === 0) {
+                        clearInterval(timer.value)
+                        codeStatus.value = false
+                        codeButtonText.value = '再次获取'
+                    }else {
+                        codeButtonText.value = `${time}秒重新获取`
+                    }
+                }, 1000)
+            })
+            const clearCountDown = (() => {
+                codeStatus.value = false
+                codeButtonText.value = '获取验证码'
+                clearInterval(timer.value)
             })
             return {
                 menuTab,

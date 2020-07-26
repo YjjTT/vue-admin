@@ -11,3 +11,19 @@ export function GetSms(data) {
         data
     })
 }
+
+export function Register(data) {
+    return instance.request({
+        method: 'POST',
+        url: '/register/',
+        data
+    })
+}
+
+export function Login(data) {
+    return instance.request({
+        method: 'POST',
+        url: '/login/',
+        data
+    })
+}
