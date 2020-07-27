@@ -48,6 +48,7 @@
 </template>
 
 <script>
+    import sha1 from 'js-sha1'
     import {reactive, ref, onMounted} from '@vue/composition-api'
     import {stripscript, validateEmail, validatePasswords, validateCodes} from "../../utils/validate";
     import {GetSms, Login, Register} from '../../api/login'
@@ -169,7 +170,7 @@
                     if (valid) {
                         let data = {
                             username: ruleForm.username,
-                            password: ruleForm.password,
+                            password: sha1(ruleForm.password),
                             code: ruleForm.code,
                             module: model.value
                         }
@@ -177,6 +178,9 @@
                             Login(data).then(res => {
                                 console.log(res)
                                 root.$message.success(res.data.message)
+                                root.$route.push({
+                                    name: 'Console'
+                                })
                             })
                         }else {
                             Register(data).then(res => {
