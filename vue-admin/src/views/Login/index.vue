@@ -176,7 +176,6 @@
                         }
                         if (model.value === 'login') {
                             Login(data).then(res => {
-                                console.log(res)
                                 root.$message.success(res.data.message)
                                 root.$route.push({
                                     name: 'Console'
@@ -187,7 +186,6 @@
                                 root.$message.success(res.data.message)
                                 toggleMenu(menuTab[0])
                                 clearCountDown()
-                            }).catch(err => {
                             })
                         }
                     } else {

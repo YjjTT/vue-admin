@@ -1,0 +1,29 @@
+$color_blur: #00a3ff;
+
+@mixin webkit($type, $value) {
+  -webkit-#{$type}: $value;
+  -moz-#{$type}: $value;
+  -ms-#{$type}: $value;
+  -o-#{$type}: $value;
+  #{$type}: $value;
+}
+
+@mixin webkitA($type, $value) {
+  #{$type}: -webkit-#{$value};
+  #{$type}: -moz-#{$value};
+  #{$type}: -ms-#{$value};
+  #{$type}: -o-#{$value};
+  #{$type}: $value;
+}
+
+@mixin clearfix {
+  &:after {
+    clear: both;
+    content: '.';
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+  *height: 1%;
+}
