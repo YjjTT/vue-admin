@@ -1,5 +1,8 @@
 <template>
     <div id="main-wrap">
+        <div class="main-content">
+            <div class="content"></div>
+        </div>
         <router-view />
     </div>
 </template>
@@ -12,9 +15,16 @@
 
 <style lang="scss">
     #main-wrap {
-        width: 100vw;
         height: 100vh;
-        padding: 75px 0 0 250px;
+    }
+    .main-content {
+        width: 100%;
+        height: 100%;
+        padding-top: 105px;
+        padding-left: 280px;
         @include webkit(box-sizing, border-box);
+        .content {
+
+        }
     }
 </style>

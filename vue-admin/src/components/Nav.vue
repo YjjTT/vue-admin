@@ -5,9 +5,9 @@
                 text-color="#fff"
                 active-text-color="#fff" router>
             <template v-for="(item, index) in routers">
-                <el-submenu v-if="!item.hidden" :key="item.id" :index="index">
+                <el-submenu v-if="!item.hidden" :key="item.id" :index="index+''">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <svg-icon class="icon" :name="item.meta.icon"></svg-icon>
                         <span>{{item.meta.name}}</span>
                     </template>
                     <el-menu-item v-for="(subItem, index) in item.children" :key="subItem.id" :index="subItem.path">{{subItem.meta.name}}</el-menu-item>
@@ -23,7 +23,6 @@
         name: "Nav",
         setup(props, {root}) {
             const routers = reactive(root.$router.options.routes)
-            console.log(routers)
             return {
                 routers
             }
@@ -42,5 +41,8 @@
     }
     .el-submenu .el-menu-item.is-active{
         background-color: #f56c6c !important;
+    }
+    .icon {
+        margin-right: 10px;
     }
 </style>
