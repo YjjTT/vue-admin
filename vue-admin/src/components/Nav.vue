@@ -48,11 +48,23 @@
     }
 
     .el-submenu .el-menu-item.is-active {
-        background-color: #f56c6c !important;
+        background-color: $main_color !important;
     }
 
     .el-menu {
         border: 0 !important;
+    }
+
+    .el-menu--vertical {
+        .el-menu {
+            background-color: $main_color !important;
+        }
+        .el-menu-item {
+            line-height: 56px !important;
+        }
+        .el-menu-item:hover {
+            background-color: $main_color !important;
+        }
     }
 
     .icon {
@@ -83,10 +95,16 @@
         #nav-wrap {
             width: 64px;
         }
-
         .logo {
             img {
                 width: 32px;
+            }
+        }
+        .el-submenu {
+            &.is-opened {
+                > .el-submenu__title {
+                    background-color: $main_color !important;
+                }
             }
         }
     }
