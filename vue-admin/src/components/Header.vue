@@ -1,6 +1,6 @@
 <template>
     <div id="header-wrap">
-        <div class="pull-left header-icon">
+        <div class="pull-left header-icon" @click="navMenuState">
             <svg-icon name="menu"></svg-icon>
         </div>
         <div class="pull-right">
@@ -17,7 +17,15 @@
 
 <script>
     export default {
-        name: "Header"
+        name: "Header",
+        setup (props, {root}) {
+            const navMenuState = (() => {
+                root.$store.commit('setCollapse')
+            })
+            return {
+                navMenuState
+            }
+        }
     }
 </script>
 
@@ -26,11 +34,11 @@
         position: fixed;
         top: 0;
         right: 0;
-        left: 250px;
         height: 75px;
         line-height: 75px;
         background-color: #fff;
         @include webkit(box-shadow, 0 3px 16px 0 rgba(0,0,0,.1));
+        @include webkit(transition, all .3s ease 0s);
         @include clearfix;
     }
     .header-icon {
@@ -54,6 +62,16 @@
             margin-bottom: -12px;
             margin-right: 12px;
             border-radius: 50px;
+        }
+    }
+    .open {
+        #header-wrap {
+            left: 250px;
+        }
+    }
+    .close {
+        #header-wrap {
+            left: 64px;
         }
     }
 </style>

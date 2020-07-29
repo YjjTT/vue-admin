@@ -1,8 +1,10 @@
 <template>
     <div id="nav-wrap">
+        <h1 class="logo"><img src="../assets/logo.png" alt=""></h1>
         <el-menu
                 background-color="transparent"
                 text-color="#fff"
+                :collapse="isCollapse"
                 active-text-color="#fff" router>
             <template v-for="(item, index) in routers">
                 <el-submenu v-if="!item.hidden" :key="item.id" :index="index+''">
@@ -10,7 +12,9 @@
                         <svg-icon class="icon" :name="item.meta.icon"></svg-icon>
                         <span>{{item.meta.name}}</span>
                     </template>
-                    <el-menu-item v-for="(subItem, index) in item.children" :key="subItem.id" :index="subItem.path">{{subItem.meta.name}}</el-menu-item>
+                    <el-menu-item v-for="(subItem, index) in item.children" :key="subItem.id" :index="subItem.path">
+                        {{subItem.meta.name}}
+                    </el-menu-item>
                 </el-submenu>
             </template>
         </el-menu>
@@ -18,13 +22,16 @@
 </template>
 
 <script>
-    import {ref, reactive} from '@vue/composition-api'
+    import {ref, reactive, computed} from '@vue/composition-api'
+
     export default {
         name: "Nav",
         setup(props, {root}) {
+            const isCollapse = computed(() => root.$store.state.isCollapse);
             const routers = reactive(root.$router.options.routes)
             return {
-                routers
+                routers,
+                isCollapse
             }
         }
     }
@@ -33,16 +40,54 @@
 <style lang="scss">
     #nav-wrap {
         position: fixed;
-        width: 250px;
         height: 100vh;
         top: 0;
         left: 0;
         background-color: #344a5f;
+        @include webkit(transition, all .3s ease 0s)
     }
-    .el-submenu .el-menu-item.is-active{
+
+    .el-submenu .el-menu-item.is-active {
         background-color: #f56c6c !important;
     }
+
+    .el-menu {
+        border: 0 !important;
+    }
+
     .icon {
         margin-right: 10px;
+    }
+
+    .logo {
+        text-align: center;
+
+        img {
+            margin: 28px auto 25px;
+        }
+    }
+
+    .open {
+        #nav-wrap {
+            width: 250px;
+        }
+
+        .logo {
+            img {
+                width: 92px;
+            }
+        }
+    }
+
+    .close {
+        #nav-wrap {
+            width: 64px;
+        }
+
+        .logo {
+            img {
+                width: 32px;
+            }
+        }
     }
 </style>
