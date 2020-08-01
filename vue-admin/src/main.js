@@ -4,10 +4,13 @@ import VueCompositionApi from '@vue/composition-api'
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import "./router/premit";
+
+import ElementUI from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+
 // 自定义全局组件
-import './icons'
+import "./icons";
 
 Vue.use(ElementUI);
 Vue.use(VueCompositionApi)
