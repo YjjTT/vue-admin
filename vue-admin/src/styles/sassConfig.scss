@@ -27,3 +27,15 @@ $color_blur: #00a3ff;
   }
   *height: 1%;
 }
+
+@mixin labelDom($align, $width, $line-height: "normal") {
+  label {
+    float: left;
+    line-height: $line-height + px;
+    width: $width + px;
+    text-align: $align;
+  }
+  .wrap-content {
+    margin-left: $width + px;
+  }
+}
