@@ -19,7 +19,7 @@
 
         <el-col :span="7">
           <div class="label-wrap date">
-            <label for>日期: &nbsp;&nbsp;</label>
+            <label for>日期:&nbsp;&nbsp;</label>
             <div class="wrap-content">
               <el-date-picker
                 v-model="value1"
