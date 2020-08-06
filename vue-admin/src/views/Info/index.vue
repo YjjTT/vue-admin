@@ -53,7 +53,7 @@
             <el-col :span="2">
                 <el-button style="width: 100%;" type="danger">搜索</el-button>
             </el-col>
-            <el-col :span="4">&nbsp;</el-col>
+            <el-col :span="4">1</el-col>
             <el-col :span="2">
                 <el-button style="width: 100%;" type="danger" class="pull-right">新增</el-button>
             </el-col>
@@ -184,18 +184,15 @@
 
 <style lang="scss" scoped>
     @import "../../styles/sassConfig.scss";
-
     .label-wrap {
         &.category {
             @include labelDom(left, 60, 40);
         }
-
         &.date {
-            @include labelDom(right, 93, 40);
+            @include labelDom(center, 93, 40);
         }
-
         &.keyword {
-            @include labelDom(right, 99, 40);
+            @include labelDom(center, 99, 40);
         }
     }
 </style>
