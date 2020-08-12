@@ -53,18 +53,19 @@
             <el-col :span="2">
                 <el-button style="width: 100%;" type="danger">搜索</el-button>
             </el-col>
-            <el-col :span="4">1</el-col>
+            <el-col :span="4"></el-col>
             <el-col :span="2">
-                <el-button style="width: 100%;" type="danger" class="pull-right">新增</el-button>
+                <el-button style="width: 100%;" type="danger" class="pull-right" @click="dialogShow = true">新增
+                </el-button>
             </el-col>
         </el-row>
         <div class="padding30"></div>
-<!--        表格数据-->
+        <!--        表格数据-->
         <el-table
                 :data="tableData"
                 border
                 header-align="center"
-                style="width: 99%;">
+                style="width: 100%;">
             <el-table-column
                     type="selection"
                     width="45">
@@ -73,7 +74,7 @@
                     align="center"
                     prop="title"
                     label="标题"
-                    width="830">
+                    width="800">
             </el-table-column>
             <el-table-column
                     align="center"
@@ -103,7 +104,7 @@
             </el-table-column>
         </el-table>
         <div class="padding30"></div>
-<!--        底部分页-->
+        <!--        底部分页-->
         <el-row>
             <el-col :span="12" class="pull-left">
                 <el-button>批量删除</el-button>
@@ -120,25 +121,29 @@
                 </el-pagination>
             </el-col>
         </el-row>
+        <!--        新增弹窗-->
+        <Dialog :show="dialogShow" @close="close"/>
     </div>
 </template>
 ￿
 <script>
     import {reactive, ref} from "@vue/composition-api";
+    import Dialog from "../../components/Dialog";
 
     export default {
         name: "Index",
+        components: {Dialog},
         setup() {
             const categorys = reactive([
-                {value: "1", label:"国内信息"},
-                {value: "2", label:"国外信息"},
-                {value: "3", label:"海外信息"},
+                {value: "1", label: "国内信息"},
+                {value: "2", label: "国外信息"},
+                {value: "3", label: "海外信息"},
             ])
             const keywords = reactive([
-                {value: "1", label:"ID"},
-                {value: "2", label:"名字"},
+                {value: "1", label: "ID"},
+                {value: "2", label: "名字"},
             ])
-            const tableData =  reactive([{
+            const tableData = reactive([{
                 title: '家具大昆仑决发可垃圾费昆仑决啊双份昆仑决挨罚可垃圾费咖啡',
                 category: '国内信息',
                 date: '2016-05-02',
@@ -162,11 +167,15 @@
             const category = ref("");
             const date = ref("");
             const keyword = ref("")
+            const dialogShow = ref(false)
             const handleSizeChange = (val) => {
 
             }
             const handleCurrentChange = (val) => {
 
+            }
+            const close = () => {
+                dialogShow.value = false
             }
             return {
                 keyword,
@@ -176,7 +185,9 @@
                 categorys,
                 keywords,
                 handleCurrentChange,
-                handleSizeChange
+                handleSizeChange,
+                dialogShow,
+                close
             };
         }
     };
@@ -184,13 +195,16 @@
 
 <style lang="scss" scoped>
     @import "../../styles/sassConfig.scss";
+
     .label-wrap {
         &.category {
             @include labelDom(left, 60, 40);
         }
+
         &.date {
             @include labelDom(center, 93, 40);
         }
+
         &.keyword {
             @include labelDom(center, 99, 40);
         }
